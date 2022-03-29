@@ -7,17 +7,18 @@ function getValues(command, allCoins) {
     let cryptoName = str[0];
     let property = str[1];
     let i = 0;
-
+    let imgCurrency = "";
     let value = undefined;
 
     do {
         if(allCoins[i].name.toLowerCase().toString() == cryptoName.toString() && allCoins[i].hasOwnProperty(property)){
             value = allCoins[i][property];
+            imgCurrency = allCoins[i]["image"];
         }
         i++;
     } while (value == undefined);
 
-    return [cryptoName, property, value];
+    return [cryptoName, property, value, imgCurrency];
 }
 
 function Chat({ socket, username, room }) {
@@ -27,18 +28,17 @@ function Chat({ socket, username, room }) {
 
     const sendMessage = async () => {
         if (currentMessage !== "") {
-            let finalMessage = currentMessage;
+            let messageData = {"message": currentMessage};
             if (currentMessage[0] == "/"){
                 console.log("checking msg" + allCoins);
                 let values = getValues(currentMessage, allCoins);
-                finalMessage = values[0] + " " + values[1] + " : " + values[2];
+                messageData.message = "The " + values[0] + " " + values[1] + " is : " + values[2];
+                messageData.imgCurrency = values[3];
             }
-            const messageData = {
-                room: room,
-                author: username,
-                message: finalMessage,
-                time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes()
-            };
+
+            messageData["room"] = room;
+            messageData["author"] = username;
+            messageData["time"] = new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes()
             await socket.emit("send_message", messageData);
             setMessageList((list) => [...list, messageData]);
         }
@@ -63,14 +63,14 @@ function Chat({ socket, username, room }) {
 
     return <div className='chat-window'>
         <div className="chat-header">
-            <p>Live Chat</p>
+            <p><a href=".">Reload Chat</a></p>
         </div>
         <div className="chat-body">
             {messageList.map((messageContent)=> {
                 return <div className='message' id={username === messageContent.author ? "you" : "other"}>
                     <div>
                             <div className='message-content'>
-                                <p>{messageContent.message}</p>
+                                <p>{messageContent.message} {messageContent.hasOwnProperty("imgCurrency") ? <img src={messageContent.imgCurrency} height="15px"/> : ""} </p>
                             </div>
                             <div className='message-meta'>
                                 <p id="time">{messageContent.time}</p>
@@ -82,7 +82,7 @@ function Chat({ socket, username, room }) {
             })}
         </div>
         <div className="chat-footer">
-            <input type="reset" type="text" placeholder="..." onChange={(event) => {
+            <input  type="text" placeholder="..." onChange={(event) => {
             setCurrentMessage(event.target.value);
         }}
         onKeyPress={(event) => {event.key === "Enter" && sendMessage()}}
