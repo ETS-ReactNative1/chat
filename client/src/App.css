@@ -212,3 +212,15 @@ a{
 .hide {
   opacity: 0 !important;
 }
+
+
+.helper {
+  width: 54vw;
+  height: auto;
+  background-color: #f8bce1;
+  position: relative;
+}
+
+ul {
+  list-style: none;
+}
