@@ -1,6 +1,6 @@
 # Crypto Chat 
 ## Description :
-This project is about making a "Most Viable Product" of a web app made in React, the idea was to connect 2 users in a selected room and they would be able
+This project is about making a "Minimum Viable Product" of a web app made in React, the idea was to connect 2 users in a selected room and they would be able
 to use certain command included in the chat to get access of certain crypto data provided by Coingecko. I used libraries such Axios, nodemon and Node.js.
 Some of the challenges I faced was making rooms and connecting users together, I've never used API calls before so it was new technology for me. 
 I hope in the future to implement more features like having private rooms and user logins. A better UI too.
