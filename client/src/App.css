@@ -215,10 +215,10 @@ a{
 
 
 .helper {
-  width: 54vw;
+  width: auto;
   height: auto;
-  background-color: #f8bce1;
-  position: relative;
+  background-color: #f8bce156;
+  backdrop-filter: blur(20px);
 }
 
 ul {

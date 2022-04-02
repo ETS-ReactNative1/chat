@@ -5,10 +5,10 @@ function closeButton() {
 }
 
 function Helper(state) {
-
+//Défini l'état pour fermer la window
     return (
         <div className="helper">
-            //Défini l'état pour fermer la window
+            
             <div><button id="closeListButton" onClick={() => state.hideMe(false)}>X</button></div>
             <div className="listCoins">
                 <h3>coinlist :</h3>

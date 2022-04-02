@@ -79,9 +79,10 @@ function Chat({ socket, username, room }) {
         </div>
         <div className="chat-body">
             {messageList.map((messageContent)=> {
+                //Si le message à récupèrer une image elle est afficher, sinon l'image n'est pas afficher car elle n'a pas été récupèrer 
                 return <div className='message' id={username === messageContent.author ? "you" : "other"}>
                     <div>
-                        //Si le message à récupèrer une image elle est afficher, sinon l'image n'est pas afficher car elle n'a pas été récupèrer
+                        
                         <div className='message-content'>
                             <p>{messageContent.message} {messageContent.hasOwnProperty("imgCurrency") ? <img src={messageContent.imgCurrency} height="15px"/> : ""} </p>
                         </div>
@@ -107,7 +108,7 @@ function Chat({ socket, username, room }) {
             <button onClick={sendMessage}> Send </button>
         </div>
         <div>
-            //si le setHelper est true il affiche la liste de commande help sinon elle ne s'affiche pas
+            /help to get command list
             {helper ? < Helper hideMe={setHelper}/> : ""}
         </div>
     </div>
