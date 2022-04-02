@@ -3,18 +3,18 @@ import io from 'socket.io-client'
 import  { useState } from "react";
 import Chat from './Chat';
 
-
+//Création du websocket
 const socket = io.connect("http://localhost:3001");
 
 
 
 function App() {
-
+  //Définition des useState
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
   const [showChat, setShowChat] = useState(false);
 
-
+  //Fonction pour se connecter à une room
   const joinRoom = () => {
     if (username !== "" && room !== "" ) {
 
@@ -24,7 +24,7 @@ function App() {
     
     } 
   };
-
+//Return du éléments html comme le container du JoinChat, username etc
   return (
     <div className="App">
       {!showChat ? (
