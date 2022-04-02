@@ -75,7 +75,7 @@ function Chat({ socket, username, room }) {
     //On return les élément à afficher
     return <div className='chat-window'>
         <div className="chat-header">
-            <p><a href=".">Reload Chat</a></p>
+            <p><a href=".">Welcome {username} Room : {room}</a></p>
         </div>
         <div className="chat-body">
             {messageList.map((messageContent)=> {
