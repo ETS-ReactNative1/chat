@@ -33,3 +33,7 @@ quand on écrit le symbole "/". Ensuite viens le fait d'utiliser un websocket po
 ne veulent pas s'executer comme le scroll qui marche une 1 fois sur 10. (A fix). J'ai découvert pleins de nouvelles technologies web intéressante que je 
 réutiliserai par la suite. J'aime beaucoup le react native. Je voulais fournir un début d'application avec une fonctionalité intéressante et je trouve que 
 l'idée d'implémenter le prix directement dans le chat est plutot intéressant bien que surement deja présent sur des app comme discord. 
+
+
+###Errors not fixed :
+in the file client/src/chat.js comment line 38-39, this is not the useEffect for recover message but to recover the data from the API !!!
