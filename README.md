@@ -35,5 +35,3 @@ réutiliserai par la suite. J'aime beaucoup le react native. Je voulais fournir 
 l'idée d'implémenter le prix directement dans le chat est plutot intéressant bien que surement deja présent sur des app comme discord. 
 
 
-###Errors not fixed :
-in the file client/src/chat.js comment line 38-39, this is not the useEffect for recover message but to recover the data from the API !!!
