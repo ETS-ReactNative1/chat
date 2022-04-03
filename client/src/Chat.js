@@ -36,7 +36,7 @@ function Chat({ socket, username, room }) {
     })
 
     // A chaque fois que la dépendence est modifié, le useEffect est appelé
-    // Dans ce cas la c'est la liste de message.
+    // Dans ce cas la on récupère la liste des données crypto de l'api.
     useEffect(() =>  {
         axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false')
         .then(res => {
