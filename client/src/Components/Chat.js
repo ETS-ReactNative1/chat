@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Helper from './Helper';
+import TextField from '@mui/material/TextField';
+
 
 
 
@@ -58,7 +60,7 @@ function Chat({ socket, username, room }) {
             } else if (currentMessage[0] == "/"){
                 console.log("checking msg" + allCoins);
                 let values = getPrice(currentMessage, allCoins);
-                messageData.message = "The " + values[0] + " " + values[1] + " is : " + values[2];
+                messageData.message = values[0] + " " + values[1] + " is " + values[2];
                 messageData.imgCurrency = values[3];
             }
             //Récupération des données pour les informations de la room, auteur, et heure d'envoi
@@ -69,7 +71,19 @@ function Chat({ socket, username, room }) {
             await socket.emit("send_message", messageData);
             setMessageList((list) => [...list, messageData]);
         }
+        
+            setVal(() => "")
+            setVal(() => null);
+            //document.getElementsByClassName("chat-body").scrollIntoView()
+            
+            
+            
+
+            
+          
     }
+
+    const [val, setVal] = useState();
 
 
     //On return les élément à afficher
@@ -90,13 +104,17 @@ function Chat({ socket, username, room }) {
                             <p id="time">{messageContent.time}</p>
                             <p id="author">{messageContent.author}</p>
                         </div>
+                        
                     </div>
+                    
                 </div>
+                
             })}
         </div>
+        
         <div className="chat-footer">
-            <input
-                type="text" placeholder="..." onChange={(event) => {
+            <TextField variant="standard"
+                type="text" placeholder="/help to get command list" value={val} onChange={(event) => {
                     setCurrentMessage(event.target.value);
                 }}
                 onKeyPress={(event) => {
@@ -105,10 +123,10 @@ function Chat({ socket, username, room }) {
                     }
                 }}
             />
-            <button onClick={sendMessage}> Send </button>
+            <button onClick={sendMessage}> &#x21e8; </button>
         </div>
         <div>
-            /help to get command list
+            {/*<p>{!helper  ? "/help to get command list" :  ""}</p>*/}
             {helper ? < Helper hideMe={setHelper}/> : ""}
         </div>
     </div>

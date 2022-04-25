@@ -17,6 +17,11 @@ body {
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,700");
 
 
+@media screen and (min-width: 320px){
+
+
+
+
 h1{
   color: white;
   
@@ -96,7 +101,9 @@ a{
 }
 
 .chat-window .chat-body {
-  height: calc(750px - (45px + 70px));
+  min-height: 90%;
+  max-height: 90%;
+  overflow: scroll;
   border: 1px solid #263238;
   background: rgba(255, 255, 255, 0.397);
   backdrop-filter: blur(20px);
@@ -175,22 +182,16 @@ a{
 }
 
 .chat-window .chat-footer {
-  height: 40px;
+  height: 30px;
   border: 1px solid #263238;
   border-top: none;
-  display: flex;
+  display: flex; 
 }
 
 .chat-window .chat-footer input {
-  height: 100%;
-  flex: 85%;
-  border: 0;
-  padding: 0 0.7em;
-  font-size: 1em;
-  border-right: 1px dotted #607d8b;
-
-  outline: none;
-  font-family: "Open Sans", sans-serif;
+width: 600px;
+background-color: white;
+  
 }
 
 .chat-window .chat-footer button {
@@ -216,11 +217,39 @@ a{
 
 .helper {
   width: auto;
-  height: auto;
-  background-color: #f8bce156;
+  height: 80px;
+  background-color: #ffffff17;
   backdrop-filter: blur(20px);
 }
 
 ul {
   list-style: none;
+}
+
+}
+
+@media screen and (min-width: 1024px){
+
+.chat-window {
+  width: 700px;
+  height: 720px;
+}
+
+.helper {
+  display: flex;
+  justify-content: center;
+  width: 50%;
+  height: 60px;
+  background-color: #ffffff;
+  backdrop-filter: blur(20px);
+}
+
+.helper button {
+  margin: 10px;
+}
+
+
+
+
+
 }

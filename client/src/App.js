@@ -1,7 +1,8 @@
 import './App.css';
 import io from 'socket.io-client'
 import  { useState } from "react";
-import Chat from './Chat';
+import Chat from './Components/Chat';
+import Button from '@mui/material/Button';
 
 //Création du websocket
 const socket = io.connect("http://localhost:3001");
@@ -40,7 +41,9 @@ function App() {
         onChange={(event) => {
           setRoom(event.target.value);
         }} />
-      <button onClick={joinRoom}>Join the Room</button>
+      {/* <button onClick={joinRoom}>Join the Room</button> */}
+      <Button variant="outlined" onClick={joinRoom}>Join Room</Button>
+      <p>Powered by CoinGeckoAPI</p>
       </div>
       )
 : (
