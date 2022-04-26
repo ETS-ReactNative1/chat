@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Helper from './Helper';
 import TextField from '@mui/material/TextField';
-
+import Button from '@mui/material/Button';
+import ButtonSend from './ButtonSend';
 
 
 
@@ -71,16 +72,9 @@ function Chat({ socket, username, room }) {
             await socket.emit("send_message", messageData);
             setMessageList((list) => [...list, messageData]);
         }
-        
             setVal(() => "")
             setVal(() => null);
-            //document.getElementsByClassName("chat-body").scrollIntoView()
-            
-            
-            
-
-            
-          
+            document.getElementsById("you").scrollIntoView()
     }
 
     const [val, setVal] = useState();
@@ -98,7 +92,7 @@ function Chat({ socket, username, room }) {
                     <div>
                         
                         <div className='message-content'>
-                            <p>{messageContent.message} {messageContent.hasOwnProperty("imgCurrency") ? <img src={messageContent.imgCurrency} height="15px"/> : ""} </p>
+                            <p>{messageContent.message} {messageContent.hasOwnProperty("imgCurrency") ? <img src={messageContent.imgCurrency} alt="crypto-img" height="15px"/>   : ""} </p>
                         </div>
                         <div className='message-meta'>
                             <p id="time">{messageContent.time}</p>
@@ -123,7 +117,8 @@ function Chat({ socket, username, room }) {
                     }
                 }}
             />
-            <button onClick={sendMessage}> &#x21e8; </button>
+            {/* <ButtonSend /> */}
+            <Button variant="contained" onClick={sendMessage}> &#x21e8; </Button>
         </div>
         <div>
             {/*<p>{!helper  ? "/help to get command list" :  ""}</p>*/}

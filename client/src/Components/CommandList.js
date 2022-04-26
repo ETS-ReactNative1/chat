@@ -1,9 +1,8 @@
 const CommandList = [
-    { label: '/bitcoin current_price'},
-    { label: '/bitcoin current_price'},
-    { label: '/bitcoin current_price'},
-    { label: '/bitcoin current_price'},
-    { label: '/bitcoin current_price'},
+    { label: '/name current_price'},
+    {label: "/name max_supply"},
+    {label: "/name total_volume"},
+    {label: "/name market_cap"}
     
 ]
 

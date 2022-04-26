@@ -195,21 +195,15 @@ background-color: white;
 }
 
 .chat-window .chat-footer button {
-  border: 0;
   display: grid;
   place-items: center;
   cursor: pointer;
   flex: 15%;
   height: 100%;
-  background: green;
-  outline: none;
-  font-size: 25px;
-  color: lightgray;
+
 }
 
-.chat-window .chat-footer button:hover {
-  color: #43a047;
-}
+
 .hide {
   opacity: 0 !important;
 }
@@ -227,7 +221,7 @@ ul {
 }
 
 }
-
+/* DESKTOP VIEW */ 
 @media screen and (min-width: 1024px){
 
 .chat-window {
