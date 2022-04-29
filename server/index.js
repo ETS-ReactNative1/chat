@@ -14,17 +14,22 @@ const io = new Server(server, {
         methods: ["GET", "POST"],
     },
 })
+
+let users = {};
+
 //on récupère l'id grâce a socket IO
 io.on("connection", (socket) => {
     console.log(`User connected ${socket.id}`);
 
 //Récupération de la room
     socket.on("join_room", (data) => {
-        socket.join(data);
-        console.log(`User with ID: ${socket.id} joined room: ${data}`);
+        socket.join(data.room);
+        users[socket.id] = data.username;
+        console.log(`User with username: ${data.username} ID: ${socket.id} joined room: ${data.room}`);
     });
 //Des messages envoyer
     socket.on("send_message", (data) => {
+        data["username"] = users[socket.id];
         socket.to(data.room).emit("receive_message", data);
         console.log(data);
     })
@@ -32,6 +37,7 @@ io.on("connection", (socket) => {
 //Et si l'user se déconnecté
     socket.on("disconnect", () => {
         console.log(`User disconnected ${socket.id}`)
+        delete users[socket.id];
     });
 });
 

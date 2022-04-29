@@ -34,21 +34,36 @@ function Chat({ socket, username, room }) {
     const [allCoins, setAllCoins] = useState([]);
     const [helper, setHelper] = useState(false);
 //Les messages sont updates de oldMessageList à newMessages.
-    socket.on("receive_message", (newMessage) => {
-        setMessageList((oldMsgList) => [...oldMsgList, newMessage]);
-    })
-
+    
     // A chaque fois que la dépendence est modifié, le useEffect est appelé
     // Dans ce cas la on récupère la liste des données crypto de l'api.
     useEffect(() =>  {
-        axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false')
-        .then(res => {
-            setAllCoins(res.data);
-            console.log(allCoins);
+        socket.on("receive_message", (newMessage) => {
+            setMessageList((oldMsgList) => [...oldMsgList, newMessage]);
+            console.log("bite");
+            console.log(messageList);
         })
-        .catch(error => console.log(error))
-    }, [messageList]);
+    }, []);
 
+    const callTop10API = () =>{
+        axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false')
+            .then(res => {
+                setAllCoins(res.data);
+                console.log(allCoins);
+            })
+            .catch(error => console.log(error))
+    }
+
+    const callAnyCoinAPI = async (id) =>{
+        let coin;
+        await axios.get('https://api.coingecko.com/api/v3/coins/' + id)
+            .then(res => {
+                coin = res;
+            })
+            .catch(error => console.log(error))
+        //console.log(coin.data);
+        return coin.data;
+    }
 
 //Fonction qui va regarder si le message contient certain paramètre comme "/"
 //Pour ensuite savoir si l'utilisateur à utiliser la commande "/help" ou bien alors "/bitcoin etc.."
@@ -59,10 +74,16 @@ function Chat({ socket, username, room }) {
             if (currentMessage === "/help") {
                 setHelper(true)
             } else if (currentMessage[0] == "/"){
+                callTop10API();
                 console.log("checking msg" + allCoins);
                 let values = getPrice(currentMessage, allCoins);
                 messageData.message = values[0] + " " + values[1] + " is " + values[2];
                 messageData.imgCurrency = values[3];
+            } else if (currentMessage[0] == "#"){
+                let id = currentMessage.substring(1);
+                let bite = await callAnyCoinAPI(id);
+                messageData.message = "The price is " + bite.market_data.current_price.chf + "";
+                messageData.imgCurrency = bite.image.small;
             }
             //Récupération des données pour les informations de la room, auteur, et heure d'envoi
             messageData["room"] = room;
@@ -74,7 +95,7 @@ function Chat({ socket, username, room }) {
         }
             setVal(() => "")
             setVal(() => null);
-            document.getElementsById("you").scrollIntoView()
+            
     }
 
     const [val, setVal] = useState();
@@ -87,6 +108,7 @@ function Chat({ socket, username, room }) {
         </div>
         <div className="chat-body">
             {messageList.map((messageContent)=> {
+                //console.log(messageContent)
                 //Si le message à récupèrer une image elle est afficher, sinon l'image n'est pas afficher car elle n'a pas été récupèrer 
                 return <div className='message' id={username === messageContent.author ? "you" : "other"}>
                     <div>
@@ -96,7 +118,7 @@ function Chat({ socket, username, room }) {
                         </div>
                         <div className='message-meta'>
                             <p id="time">{messageContent.time}</p>
-                            <p id="author">{messageContent.author}</p>
+                            <p id="author">{!messageContent.hasOwnProperty("username") ? "you" : messageContent.username}</p>
                         </div>
                         
                     </div>
@@ -108,7 +130,7 @@ function Chat({ socket, username, room }) {
         
         <div className="chat-footer">
             <TextField variant="standard"
-                type="text" placeholder="/help to get command list" value={val} onChange={(event) => {
+                type="text" placeholder="/help to get command list" value={val}  onChange={(event) => {
                     setCurrentMessage(event.target.value);
                 }}
                 onKeyPress={(event) => {
@@ -118,7 +140,7 @@ function Chat({ socket, username, room }) {
                 }}
             />
             {/* <ButtonSend /> */}
-            <Button variant="contained" onClick={sendMessage}> &#x21e8; </Button>
+            <Button variant="contained" onClick={() => sendMessage()}> &#x21e8; </Button>
         </div>
         <div>
             {/*<p>{!helper  ? "/help to get command list" :  ""}</p>*/}

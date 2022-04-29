@@ -18,13 +18,17 @@ function App() {
   //Fonction pour se connecter à une room
   const joinRoom = () => {
     if (username !== "" && room !== "" ) {
-
-      socket.emit("join_room", room);
+      let data = {
+        room: room,
+        username: username
+      }
+      socket.emit("join_room", data);
       setShowChat(true);
       console.log(`${username}, ${room}`);
     
     } 
   };
+  
 //Return du éléments html comme le container du JoinChat, username etc
   return (
     <div className="App">
