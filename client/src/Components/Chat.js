@@ -40,7 +40,7 @@ function Chat({ socket, username, room }) {
     useEffect(() =>  {
         socket.on("receive_message", (newMessage) => {
             setMessageList((oldMsgList) => [...oldMsgList, newMessage]);
-            console.log("bite");
+            
             console.log(messageList);
         })
     }, []);
@@ -80,10 +80,24 @@ function Chat({ socket, username, room }) {
                 messageData.message = values[0] + " " + values[1] + " is " + values[2];
                 messageData.imgCurrency = values[3];
             } else if (currentMessage[0] == "#"){
-                let id = currentMessage.substring(1);
-                let bite = await callAnyCoinAPI(id);
-                messageData.message = "The price is " + bite.market_data.current_price.chf + "";
-                messageData.imgCurrency = bite.image.small;
+                let apiCommand = currentMessage.substring(1);
+                apiCommand = apiCommand.split("-");
+                let id = apiCommand[0];
+                let cryptoCoin = await callAnyCoinAPI(id);
+                messageData.imgCurrency = cryptoCoin.image.small;
+                
+                    if (apiCommand[1] === "currentprice" ) {
+                    
+                    messageData.message = "The price is " + cryptoCoin.market_data.current_price.chf;
+                } else if (apiCommand[1] === "currentmarketcap" ) {
+                    messageData.message = "The currentmarket is " + cryptoCoin.market_data.market_cap.chf;
+
+                } 
+                else if (apiCommand[1] === "totalvolume" ) {
+                    messageData.message = "The price is " + cryptoCoin.market_data.market_cap.chf;
+
+                } 
+                
             }
             //Récupération des données pour les informations de la room, auteur, et heure d'envoi
             messageData["room"] = room;
