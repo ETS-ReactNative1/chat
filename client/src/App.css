@@ -205,7 +205,9 @@ background-color: rgb(255, 255, 255);
   display: flex; 
 }
 
-
+.chat-window .chat-footer input {
+  width: 500px;
+}
 
 .chat-window .chat-footer button {
   width: 20px;
