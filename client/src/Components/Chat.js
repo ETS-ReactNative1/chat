@@ -11,16 +11,13 @@ import CommandList from './CommandList'
 let allIds = [];
 
 axios.get('https://api.coingecko.com/api/v3/coins/list')
-    .then(res => {
-        allIds = res.data.map( (coin) => coin.id);
-    })
-    .catch((err) => console.log(err))
-    .finally( () => console.log(allIds.length));
-
+.then(res => {
+    allIds = res.data.map( (coin) => coin["id"]);
+})
+.catch((err) => console.log(err))
 
 //On défini les useState pour ensuite changer leurs valeurs plus facilement
 function Chat({ socket, username, room }) {
-
     const [currentMessage, setCurrentMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
 
@@ -32,6 +29,18 @@ function Chat({ socket, username, room }) {
             console.log(messageList);
         })
     }, []);
+
+    useEffect(() => {
+        if (currentMessage !== null) {
+            const splitted = currentMessage.split(" ");
+            console.log(allIds[0], allIds[1], allIds[20], allIds[343]);
+            console.log(currentMessage);
+            if (splitted.length > 1) {
+                let contained = allIds.filter(id => id.indexOf(splitted[1]) >= 0);
+                console.log(contained);
+            }
+        }
+    }, [currentMessage])
 
     const callAnyCoinAPI = async (id) => {
         let coin = {}
@@ -82,12 +91,9 @@ function Chat({ socket, username, room }) {
             setMessageList((list) => [...list, messageData]);
         }
 
-        setVal(() => "");
-        setVal(() => null);
+        setCurrentMessage("");
+        setCurrentMessage(null);
     }
-
-    const [val, setVal] = useState();
-
 
     //On return les élément à afficher
     return <div className='chat-window'>
@@ -114,31 +120,23 @@ function Chat({ socket, username, room }) {
         </div>
 
         <div className="chat-footer">
-            <Autocomplete
-                fullWidth
-                label="fullWidth"
-                id="fullWidth"
-                disablePortal
-                onInputChange={(event, value) => {
-                    setCurrentMessage(value);
+            <input name="chatbox" list="command-flavors"
+                value={currentMessage}
+                onChange={(event) => setCurrentMessage(event.target.value)}
+                onKeyPress={ (event) => {
+                    if (event.key === "Enter") {
+                        sendMessage();
+                    }
                 }}
-                options={CommandList}
-                sx={{ width: 300 }}
-                renderInput={(params) =>
-                    <TextField {...params}
-                        label=""
-                        value={val}
-                        onChange={(event) => {
-                            setCurrentMessage(event.target.value);
-                        }}
-                        onKeyPress={(event) => {
-                            if (event.key === "Enter") {
-                                sendMessage()
-                            }
-                        }}
-                    />
-                }
             />
+            <datalist id="command-flavors">
+                {
+                    CommandList.map( (command) => {
+                        return <option value={command} />;
+                    })
+                }
+
+            </datalist>
             <Button variant="contained" onClick={() => sendMessage()}> Send </Button>
         </div>
     </div>

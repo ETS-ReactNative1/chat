@@ -1,8 +1,8 @@
 const CommandList = [
-    { label: '/current_price name'},
-    {label: "/max_supply name"},
-    {label: "/total_volume name"},
-    {label: "/market_cap name"},
+    "/current_price name",
+    "/max_supply name",
+    "/total_volume name",
+    "/market_cap name",
 ]
 
 export default CommandList; 
