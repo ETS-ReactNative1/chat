@@ -4,6 +4,8 @@ import Helper from './Helper';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import ButtonSend from './ButtonSend';
+import Autocomplete from '@mui/material/Autocomplete';
+import CommandList from './CommandList'
 
 
 
@@ -73,29 +75,32 @@ function Chat({ socket, username, room }) {
             let messageData = {"message": currentMessage};
             if (currentMessage === "/help") {
                 setHelper(true)
-            } else if (currentMessage[0] == "/"){
+            } else if (currentMessage[0] === "/"){
                 callTop10API();
                 console.log("checking msg" + allCoins);
                 let values = getPrice(currentMessage, allCoins);
                 messageData.message = values[0] + " " + values[1] + " is " + values[2];
                 messageData.imgCurrency = values[3];
-            } else if (currentMessage[0] == "#"){
+            } else if (currentMessage[0] === "#"){
                 let apiCommand = currentMessage.substring(1);
                 apiCommand = apiCommand.split("-");
                 let id = apiCommand[0];
                 let cryptoCoin = await callAnyCoinAPI(id);
                 messageData.imgCurrency = cryptoCoin.image.small;
-                
+                    let cryptoData = {
+                        id: id, 
+                        price: "The price of "+ id + " is " + cryptoCoin.market_data.current_price.chf.toLocaleString('en-US', {maximumFractionDigits:2}) + "$",
+                        marketcap : "The marketcap of  " + id + " is " +  cryptoCoin.market_data.market_cap.chf.toLocaleString('en-US', {maximumFractionDigits:2}) + "$",
+                        totalvolume : "The total volume is " + cryptoCoin.market_data.total_volume.chf.toLocaleString('en-US', {maximumFractionDigits:2}) + "$",
+                    }
                     if (apiCommand[1] === "currentprice" ) {
-                    
-                    messageData.message = "The price is " + cryptoCoin.market_data.current_price.chf;
-                } else if (apiCommand[1] === "currentmarketcap" ) {
-                    messageData.message = "The currentmarket is " + cryptoCoin.market_data.market_cap.chf;
+                    messageData.message = cryptoData.price;
 
+                } else if (apiCommand[1] === "marketcap" ) {
+                    messageData.message = cryptoData.marketcap
                 } 
                 else if (apiCommand[1] === "totalvolume" ) {
-                    messageData.message = "The price is " + cryptoCoin.market_data.market_cap.chf;
-
+                    messageData.message = cryptoData.totalvolume
                 } 
                 
             }
@@ -143,23 +148,37 @@ function Chat({ socket, username, room }) {
         </div>
         
         <div className="chat-footer">
-            <TextField variant="standard"
+        <Autocomplete fullWidth label="fullWidth" id="fullWidth"
+    disablePortal
+
+    options={CommandList}
+    sx={{ width: 300 }}
+    renderInput={(params) => <TextField {...params} label=""value={val}  onChange={(event) => {
+        setCurrentMessage(event.target.value);
+        }}
+        onKeyPress={(event) => {
+            if (event.key === "Enter") {
+                sendMessage()
+            }
+        }} />}
+    />      
+        {/*<TextField variant="standard"
                 type="text" placeholder="/help to get command list" value={val}  onChange={(event) => {
-                    setCurrentMessage(event.target.value);
+                setCurrentMessage(event.target.value);
                 }}
                 onKeyPress={(event) => {
                     if (event.key === "Enter") {
                         sendMessage()
                     }
                 }}
-            />
+            />*/}
             {/* <ButtonSend /> */}
-            <Button variant="contained" onClick={() => sendMessage()}> &#x21e8; </Button>
+            <Button variant="contained" onClick={() => sendMessage()}> Send </Button>
         </div>
-        <div>
-            {/*<p>{!helper  ? "/help to get command list" :  ""}</p>*/}
+        {/*<div>
+            {/*<p>{!helper  ? "/help to get command list" :  ""}</p>
             {helper ? < Helper hideMe={setHelper}/> : ""}
-        </div>
+        </div>/*/}
     </div>
     
 }

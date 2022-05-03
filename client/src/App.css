@@ -182,19 +182,18 @@ a{
 }
 
 .chat-window .chat-footer {
-  height: 30px;
-  border: 1px solid #263238;
+  height: 50px;
+  
+background-color: rgb(255, 255, 255);
+  
   border-top: none;
   display: flex; 
 }
 
-.chat-window .chat-footer input {
-width: 600px;
-background-color: white;
-  
-}
+
 
 .chat-window .chat-footer button {
+  width: 20px;
   display: grid;
   place-items: center;
   cursor: pointer;
