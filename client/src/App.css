@@ -157,6 +157,21 @@ a{
   margin-left: 5px;
 }
 
+bot {
+  justify-content: flex-end;
+}
+
+#bot .message-content {
+  justify-content: flex-start;
+  background-color: #f5a9ff;
+}
+
+#bot.message-meta {
+  justify-content: flex-start;
+  margin-left: 5px;
+}
+
+
 #other {
   justify-content: flex-start;
 }
