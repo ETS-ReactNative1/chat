@@ -12,13 +12,16 @@ axios.get('https://api.coingecko.com/api/v3/coins/list')
 })
 .catch((err) => console.log(err))
 
-//On défini les useState pour ensuite changer leurs valeurs plus facilement
+
 function Chat({ socket, username, room }) {
+    //On défini les useState pour ensuite changer leurs valeurs plus facilement
     const [currentMessage, setCurrentMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
 
-    // A chaque fois que la dépendence est modifié, le useEffect est appelé
-    // Dans ce cas la on récupère la liste des données crypto de l'api.
+    function convert(data, id) {
+        return data.market_data[id].chf.toLocaleString('en-US', { maximumFractionDigits: 2 })
+    }
+
     useEffect(() => {
         socket.on("receive_message", (newMessage) => {
             setMessageList((oldMsgList) => [...oldMsgList, newMessage]);
@@ -26,6 +29,7 @@ function Chat({ socket, username, room }) {
         })
     }, []);
 
+    // A chaque fois que la dépendence est modifié, le useEffect est appelé
     useEffect(() => {
         if (currentMessage !== null) {
             const splitted = currentMessage.split(" ");
@@ -52,7 +56,6 @@ function Chat({ socket, username, room }) {
                     console.log(error);
                 });
         }
-
         return coin;
     }
 
@@ -77,13 +80,12 @@ function Chat({ socket, username, room }) {
                 if (cryptoCoin.hasOwnProperty("error")) {
                     messageData.message = "Sorry, the crypto you want is not available !";
                 } else {
-
                     messageData.imgCurrency = cryptoCoin.image.small;
                     const cryptoData = {
                         id: id,
-                        current_price: "The price of " + id + " is " + cryptoCoin.market_data.current_price.chf.toLocaleString('en-US', { maximumFractionDigits: 2 }) + "$",
-                        market_cap: "The marketcap of  " + id + " is " + cryptoCoin.market_data.market_cap.chf.toLocaleString('en-US', { maximumFractionDigits: 2 }) + "$",
-                        total_volume: "The total volume is " + cryptoCoin.market_data.total_volume.chf.toLocaleString('en-US', { maximumFractionDigits: 2 }) + "$",
+                        current_price: "The price of " + id + " is " + convert(cryptoCoin, "current_price") + "CHF",
+                        market_cap: "The marketcap of  " + id + " is " + convert(cryptoCoin, "market_cap") + "CHF",
+                        total_volume: "The total volume is " + convert(cryptoCoin, "total_volume") + "CHF",
                     };
                     messageData.message = cryptoData[command[0]];
                 }
