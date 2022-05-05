@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Helper from './Helper';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import ButtonSend from './ButtonSend';
-import Autocomplete from '@mui/material/Autocomplete';
 import CommandList from './CommandList'
 
 
@@ -43,14 +39,18 @@ function Chat({ socket, username, room }) {
     }, [currentMessage])
 
     const callAnyCoinAPI = async (id) => {
-        let coin = {}
+        let coin = { "error": ""};
+
         console.log(id, allIds.includes(id));
         if (allIds.includes(id)) {
             await axios.get(`https://api.coingecko.com/api/v3/coins/${id}`)
                 .then(res => {
                     coin = res.data;
                 })
-                .catch(error => console.log(error))
+                .catch(error => {
+                    coin.error = error;
+                    console.log(error);
+                });
         }
 
         return coin;
@@ -67,25 +67,29 @@ function Chat({ socket, username, room }) {
             };
 
             if (currentMessage[0] === "/") {
+                messageData.author = "Bot";
                 console.log("checking msg");
                 const command = currentMessage.substring(1).split(' ');
-
                 const id = command[1];
                 const cryptoCoin = await callAnyCoinAPI(id);
+                console.log(cryptoCoin);
 
-                messageData.imgCurrency = cryptoCoin.image.small;
-                const cryptoData = {
-                    id: id,
-                    current_price: "The price of " + id + " is " + cryptoCoin.market_data.current_price.chf.toLocaleString('en-US', { maximumFractionDigits: 2 }) + "$",
-                    market_cap: "The marketcap of  " + id + " is " + cryptoCoin.market_data.market_cap.chf.toLocaleString('en-US', { maximumFractionDigits: 2 }) + "$",
-                    total_volume: "The total volume is " + cryptoCoin.market_data.total_volume.chf.toLocaleString('en-US', { maximumFractionDigits: 2 }) + "$",
+                if (cryptoCoin.hasOwnProperty("error")) {
+                    messageData.message = "Sorry, the crypto you want is not available !";
+                } else {
+
+                    messageData.imgCurrency = cryptoCoin.image.small;
+                    const cryptoData = {
+                        id: id,
+                        current_price: "The price of " + id + " is " + cryptoCoin.market_data.current_price.chf.toLocaleString('en-US', { maximumFractionDigits: 2 }) + "$",
+                        market_cap: "The marketcap of  " + id + " is " + cryptoCoin.market_data.market_cap.chf.toLocaleString('en-US', { maximumFractionDigits: 2 }) + "$",
+                        total_volume: "The total volume is " + cryptoCoin.market_data.total_volume.chf.toLocaleString('en-US', { maximumFractionDigits: 2 }) + "$",
+                    };
+                    messageData.message = cryptoData[command[0]];
                 }
-                messageData.message = cryptoData[command[0]];
-                messageData.author = "Bot";
             }
-
             //Récupération des données pour les informations de la room, auteur, et heure d'envoi
-            messageData["time"] = new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes()
+            messageData["time"] = new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes();
             //On attend que le message soit emit pour charger les données récupèrer avant
             await socket.emit("send_message", messageData);
             setMessageList((list) => [...list, messageData]);
@@ -93,8 +97,10 @@ function Chat({ socket, username, room }) {
 
         setCurrentMessage("");
         setCurrentMessage(null);
+    
     }
 
+    
     //On return les élément à afficher
     return <div className='chat-window'>
         <div className="chat-header">
@@ -107,7 +113,7 @@ function Chat({ socket, username, room }) {
                 return <div className='message' id={username === messageContent.author ? "you" : messageContent.author === "Bot" ? "bot" : "other"}>
                     <div>
                         <div className='message-content'>
-                            <p>{messageContent.message} {messageContent.hasOwnProperty("imgCurrency") ? <img src={messageContent.imgCurrency} alt="crypto-img" height="15px" /> : ""} </p>
+                            <p>{messageContent.message} { messageContent.hasOwnProperty("imgCurrency" ) ? <img src={messageContent.imgCurrency} alt="crypto-img" height="15px" /> : ""} </p>
                         </div>
                         <div className='message-meta'>
                             <p id="time">{messageContent.time}</p>
