@@ -18,7 +18,7 @@ const io = new Server(server, {
 let users = {};
 
 //on récupère l'id grâce a socket IO
-io.on("connection", (socket) => {
+io.on("connection", (socket)  => {
     console.log(`User connected ${socket.id}`);
 
 //Récupération de la room
