@@ -20,6 +20,7 @@ function App() {
   //Fonction pour se connecter à une room
   const joinRoom = () => {
     if (username !== "" && room !== "" ) {
+      
       let data = {
         room: room,
         username: username

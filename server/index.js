@@ -20,6 +20,7 @@ let users = {};
 //on récupère l'id grâce a socket IO
 io.on("connection", (socket)  => {
     console.log(`User connected ${socket.id}`);
+    
 
 //Récupération de la room
     socket.on("join_room", (data) => {
