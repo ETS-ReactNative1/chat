@@ -3,6 +3,8 @@ import io from 'socket.io-client'
 import  { useState } from "react";
 import Chat from './Components/Chat';
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+
 
 //Création du websocket
 const socket = io.connect("http://localhost:3001");
@@ -36,15 +38,21 @@ function App() {
       <div className="joinChatContainer">
       <h1>The Crypto Chat</h1>
       <h3>Join a Chat</h3>
-      <input type="text" placeholder="Your Username"
+      <TextField id="outlined-basic" placeholder="Username"  variant="outlined" onChange={(event) => {
+          setUsername(event.target.value);
+        }}/>
+      {/*<input type="text" placeholder="Your Username"
         onChange={(event) => {
           setUsername(event.target.value);
         }}
-      />
-      <input type="text" placeholder="Room ID ex: crypto"
-        onChange={(event) => {
+      />*/}
+      <TextField id="outlined-basic" placeholder="Room Name"  variant="outlined" onChange={(event) => {
           setRoom(event.target.value);
         }} />
+      {/*<input type="text" placeholder="Room ID ex: crypto"
+        onChange={(event) => {
+          setRoom(event.target.value);
+        }} />*/}
       {/* <button onClick={joinRoom}>Join the Room</button> */}
       <Button variant="outlined" onClick={joinRoom}>Join Room</Button>
       <p>Powered by CoinGeckoAPI</p>
